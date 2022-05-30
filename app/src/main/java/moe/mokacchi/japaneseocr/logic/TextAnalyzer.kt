@@ -9,7 +9,16 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 
-class JapaneseTextAnalyzer(private val onTextAnalyzed: (Text) -> Unit) :
+data class FrameResult(
+    val frameWidth: Int,
+    val frameHeight: Int,
+    val frameRotation: Int,
+    val result: Text
+)
+
+typealias OnFrameAvailableFn = (FrameResult) -> Unit
+
+class TextAnalyzer(private val onFrameAvailable: OnFrameAvailableFn) :
     ImageAnalysis.Analyzer {
 
     private val recognizer =
@@ -24,11 +33,21 @@ class JapaneseTextAnalyzer(private val onTextAnalyzed: (Text) -> Unit) :
                 InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
             recognizer.process(image).addOnSuccessListener {
-                onTextAnalyzed(it)
+                val result = FrameResult(
+                    imageProxy.width,
+                    imageProxy.height,
+                    imageProxy.imageInfo.rotationDegrees,
+                    it
+                )
+
+                onFrameAvailable(result)
+
             }.addOnFailureListener { e ->
                 Log.e("ImageAnalysis", e.message ?: "")
+
             }.addOnCompleteListener {
                 imageProxy.close()
+
             }
         }
     }

@@ -5,8 +5,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavController
-import com.google.mlkit.vision.text.Text
 import moe.mokacchi.japaneseocr.logic.Camera
+import moe.mokacchi.japaneseocr.logic.FrameResult
 import moe.mokacchi.japaneseocr.ui.components.CameraControls
 import moe.mokacchi.japaneseocr.ui.components.CameraOCRBoundaryOverlay
 import moe.mokacchi.japaneseocr.ui.components.CameraPreview
@@ -16,12 +16,12 @@ import org.koin.androidx.compose.get
 fun CameraScreen(
     navController: NavController,
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val camera = get<Camera>()
+    var frameResult: FrameResult? by remember { mutableStateOf(null)}
 
-    var blocks by remember { mutableStateOf(emptyList<Text.TextBlock>())}
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val camera = get<Camera>().also { it.start(lifecycleOwner, onTextAnalyzed = { result -> frameResult = result })}
 
     CameraPreview(camera.preview, modifier = Modifier.fillMaxSize())
-    CameraOCRBoundaryOverlay(blocks, modifier = Modifier.fillMaxSize())
-    CameraControls { camera.startCamera(lifecycleOwner, { blocks = it.textBlocks }) }
+    frameResult?.let { CameraOCRBoundaryOverlay(it, modifier = Modifier.fillMaxSize()) }
+    CameraControls {  }
 }

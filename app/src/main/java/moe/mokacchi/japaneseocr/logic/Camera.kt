@@ -1,12 +1,12 @@
 package moe.mokacchi.japaneseocr.logic
 
 import android.content.Context
-import android.util.Rational
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.mlkit.vision.text.Text
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -23,15 +23,8 @@ class Camera(context: Context) {
     private val imageAnalysis = ImageAnalysis.Builder()
         .build()
 
-    val preview = Preview.Builder().build()
-
-    private val viewPort: ViewPort = ViewPort.Builder(Rational(3,4), preview.targetRotation).setScaleType(ViewPort.FILL_CENTER).build()
-    private val useCaseGroup = UseCaseGroup.Builder()
-        .setViewPort(viewPort)
-        .addUseCase(preview)
-        .addUseCase(imageAnalysis)
+    val preview = Preview.Builder()
         .build()
-
 
     init {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -39,22 +32,21 @@ class Camera(context: Context) {
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
         }, ContextCompat.getMainExecutor(context))
-
     }
 
-    fun startCamera(lifecycleOwner: LifecycleOwner, onTextAnalyzed: (Text) -> Unit) {
+    fun start(lifecycleOwner: LifecycleOwner, onTextAnalyzed: (FrameResult) -> Unit) {
         imageAnalysis.setAnalyzer(
             cameraExecutor,
-            JapaneseTextAnalyzer(onTextAnalyzed)
+            TextAnalyzer(onTextAnalyzed)
         )
 
         cameraProvider?.unbindAll()
         cameraProvider?.bindToLifecycle(
-            lifecycleOwner, cameraSelector, useCaseGroup
+            lifecycleOwner, cameraSelector, imageAnalysis, preview
         )
     }
 
-    fun stopCamera() {
+    fun stop() {
         cameraProvider?.unbindAll()
     }
 }
