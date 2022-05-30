@@ -1,5 +1,4 @@
 package moe.mokacchi.japaneseocr.ui.components
-import androidx.camera.core.ImageCapture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,14 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CameraControls(imageCapture: ImageCapture) {
+fun CameraControls(onCameraButtonClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier
             .fillMaxSize()
             .padding(40.dp)
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = onCameraButtonClick) {
             Icon(imageVector = Icons.Filled.Build, contentDescription = "Take a photo")
         }
     }
