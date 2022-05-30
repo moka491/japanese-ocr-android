@@ -9,7 +9,7 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 
-class JapaneseTextAnalyzer(private val processedFrameCallback: (Text) -> Unit) :
+class JapaneseTextAnalyzer(private val onTextAnalyzed: (Text) -> Unit) :
     ImageAnalysis.Analyzer {
 
     private val recognizer =
@@ -18,12 +18,13 @@ class JapaneseTextAnalyzer(private val processedFrameCallback: (Text) -> Unit) :
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
+
         if (mediaImage != null) {
             val image =
                 InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
             recognizer.process(image).addOnSuccessListener {
-                processedFrameCallback(it)
+                onTextAnalyzed(it)
             }.addOnFailureListener { e ->
                 Log.e("ImageAnalysis", e.message ?: "")
             }.addOnCompleteListener {
