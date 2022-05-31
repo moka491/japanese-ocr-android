@@ -4,17 +4,17 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.compose.ui.geometry.Size
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
+import java.io.Serializable
 
 data class FrameResult(
-    val frameWidth: Int,
-    val frameHeight: Int,
-    val frameRotation: Int,
+    val frameSize: Size,
     val result: Text
-)
+) : Serializable
 
 typealias OnFrameAvailableFn = (FrameResult) -> Unit
 
@@ -33,10 +33,11 @@ class TextAnalyzer(private val onFrameAvailable: OnFrameAvailableFn) :
                 InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
             recognizer.process(image).addOnSuccessListener {
+
+                val size = getRotationAwareImageSize(imageProxy)
+
                 val result = FrameResult(
-                    imageProxy.width,
-                    imageProxy.height,
-                    imageProxy.imageInfo.rotationDegrees,
+                    size,
                     it
                 )
 
@@ -49,6 +50,13 @@ class TextAnalyzer(private val onFrameAvailable: OnFrameAvailableFn) :
                 imageProxy.close()
 
             }
+        }
+    }
+
+    private fun getRotationAwareImageSize(imageProxy: ImageProxy): Size {
+        return when (imageProxy.imageInfo.rotationDegrees) {
+            0, 180 -> Size(imageProxy.width.toFloat(), imageProxy.height.toFloat())
+            else -> Size(imageProxy.height.toFloat(), imageProxy.width.toFloat())
         }
     }
 }

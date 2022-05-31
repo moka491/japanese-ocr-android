@@ -19,7 +19,11 @@ fun CameraScreen(
     var frameResult: FrameResult? by remember { mutableStateOf(null)}
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    val camera = get<Camera>().also { it.start(lifecycleOwner, onTextAnalyzed = { result -> frameResult = result })}
+    val camera = get<Camera>()
+
+    LaunchedEffect(true) {
+        camera.start(lifecycleOwner, onTextAnalyzed = { result -> frameResult = result })
+    }
 
     CameraPreview(camera.preview, modifier = Modifier.fillMaxSize())
     frameResult?.let { CameraOCRBoundaryOverlay(it, modifier = Modifier.fillMaxSize()) }
