@@ -1,9 +1,9 @@
 package moe.mokacchi.japaneseocr.koin
 
-import moe.mokacchi.japaneseocr.logic.Camera
+import androidx.camera.view.LifecycleCameraController
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val coreModule = module {
-    single { Camera(androidContext()) }
+    single { LifecycleCameraController(androidContext()) }
 }
