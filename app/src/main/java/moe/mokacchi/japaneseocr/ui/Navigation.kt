@@ -16,5 +16,10 @@ fun Navigation() {
                 navController
             )
         }
+        composable("lookup") {
+            CameraScreen(
+                navController
+            )
+        }
     }
 }

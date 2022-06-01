@@ -1,6 +1,8 @@
 package moe.mokacchi.japaneseocr.ui.screens.camera
 
-import android.annotation.SuppressLint
+import androidx.camera.core.ExperimentalAnalyzer
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.mlkit.vision.MlKitAnalyzer
 import androidx.camera.view.CameraController.COORDINATE_SYSTEM_VIEW_REFERENCED
 import androidx.camera.view.LifecycleCameraController
@@ -17,10 +19,12 @@ import moe.mokacchi.japaneseocr.ui.components.CameraControls
 import moe.mokacchi.japaneseocr.ui.components.CameraOCRBoundaryOverlay
 import moe.mokacchi.japaneseocr.ui.components.CameraPreview
 import org.koin.androidx.compose.get
+import java.io.File
 import java.util.concurrent.Executors
 
-@SuppressLint("UnsafeOptInUsageError")
+
 @Composable
+@ExperimentalAnalyzer
 fun CameraScreen(
     navController: NavController,
 ) {
@@ -31,8 +35,7 @@ fun CameraScreen(
     val cameraController = get<LifecycleCameraController>()
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     val textRecognizer =
-        remember { TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build()) }
-
+        remember { TextRecognition.getClient(JapaneseTextRecognizerOptions()) }
 
     LaunchedEffect(true) {
         with(cameraController) {
@@ -48,7 +51,6 @@ fun CameraScreen(
 
                     if (res != null) {
                         textBlocks = res.textBlocks
-
                     }
                 })
         }
@@ -57,5 +59,23 @@ fun CameraScreen(
 
     CameraPreview(cameraController, modifier = Modifier.fillMaxSize())
     CameraOCRBoundaryOverlay(textBlocks, modifier = Modifier.fillMaxSize())
-    CameraControls { }
+    CameraControls {
+        val outputFileOptions =
+            ImageCapture.OutputFileOptions.Builder(
+                File("${context.externalCacheDir}${File.separator}${System.currentTimeMillis()}.png")
+            ).build()
+
+        cameraController.takePicture(
+            outputFileOptions,
+            cameraExecutor,
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    navController.navigate("lookup")
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                }
+            })
+    }
 }
+
