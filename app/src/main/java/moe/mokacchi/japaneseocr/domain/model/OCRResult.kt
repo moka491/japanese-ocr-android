@@ -1,6 +1,6 @@
 package moe.mokacchi.japaneseocr.domain.model
 
-data class RecognitionResult(
+data class OCRResult(
     val imagePath: String,
-    val recognizedBlocks: List<TextBlock>
+    val textBlocks: List<TextBlock>
 )

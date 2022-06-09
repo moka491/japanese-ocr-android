@@ -1,10 +1,13 @@
 package moe.mokacchi.japaneseocr.ui
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import moe.mokacchi.japaneseocr.ui.screens.camera.CameraScreen
+import moe.mokacchi.japaneseocr.ui.screens.lookup.LookupScreen
 
 @Composable
 fun Navigation() {
@@ -16,9 +19,11 @@ fun Navigation() {
                 navController
             )
         }
-        composable("lookup") {
-            CameraScreen(
-                navController
+        composable("result/{resultId}", arguments = listOf(navArgument("resultId") { type = NavType.IntType })
+        ) { entry ->
+            LookupScreen(
+                navController,
+                entry.arguments?.getInt("resultId")
             )
         }
     }
