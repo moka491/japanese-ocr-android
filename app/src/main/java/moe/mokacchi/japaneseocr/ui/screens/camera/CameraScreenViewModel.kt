@@ -9,7 +9,6 @@ import androidx.camera.view.CameraController.COORDINATE_SYSTEM_VIEW_REFERENCED
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -17,16 +16,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moe.mokacchi.japaneseocr.domain.model.OCRResult
 import moe.mokacchi.japaneseocr.domain.model.RectangleRegion
 import moe.mokacchi.japaneseocr.domain.model.TextBlock
 import moe.mokacchi.japaneseocr.domain.model.TextLine
 import moe.mokacchi.japaneseocr.domain.usecases.SaveOCRResultUseCase
-import org.koin.androidx.compose.get
-
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File

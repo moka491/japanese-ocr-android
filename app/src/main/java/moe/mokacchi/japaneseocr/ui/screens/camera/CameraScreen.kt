@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavController
 import moe.mokacchi.japaneseocr.ui.components.CameraControls
-import moe.mokacchi.japaneseocr.ui.components.CameraOCRBoundaryOverlay
+import moe.mokacchi.japaneseocr.ui.components.CameraOCRPreview
 import moe.mokacchi.japaneseocr.ui.components.CameraPreview
 import org.koin.androidx.compose.inject
 
@@ -29,7 +29,7 @@ fun CameraScreen(
     }
 
     CameraPreview(viewModel.cameraController, modifier = Modifier.fillMaxSize())
-    CameraOCRBoundaryOverlay(viewModel.textBlocks, modifier = Modifier.fillMaxSize())
+    CameraOCRPreview(viewModel.textBlocks, modifier = Modifier.fillMaxSize())
     CameraControls {
         viewModel.takePictureAndStoreResult(context) { resultId ->
             navController.navigate("result/$resultId")

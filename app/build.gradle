@@ -74,6 +74,10 @@ dependencies {
 
     implementation "com.google.mlkit:text-recognition-japanese:16.0.0-beta4"
 
+    implementation("io.coil-kt:coil-base:2.1.0")
+    implementation("io.coil-kt:coil-compose-base:2.1.0")
+
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+
 }

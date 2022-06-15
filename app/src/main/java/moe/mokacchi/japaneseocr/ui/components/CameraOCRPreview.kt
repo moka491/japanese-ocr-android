@@ -10,9 +10,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import com.google.mlkit.vision.text.Text
 
 @Composable
-fun CameraOCRBoundaryOverlay(textBlocks: List<Text.TextBlock>, modifier: Modifier) {
-
-
+fun CameraOCRPreview(textBlocks: List<Text.TextBlock>, modifier: Modifier) {
     Canvas(modifier) {
         textBlocks.forEach { block ->
             block.lines

@@ -1,6 +1,7 @@
 package moe.mokacchi.japaneseocr.koin
 
 import androidx.camera.view.LifecycleCameraController
+import coil.ImageLoader
 import moe.mokacchi.japaneseocr.data.OCRResultRepositoryImpl
 import moe.mokacchi.japaneseocr.domain.contract.OCRResultRepository
 import moe.mokacchi.japaneseocr.domain.usecases.GetOCRResultUseCase
@@ -12,6 +13,7 @@ import org.koin.dsl.module
 
 val coreModule = module {
     single { LifecycleCameraController(androidContext()) }
+    single { ImageLoader.Builder(androidContext()).build() }
 
     single<OCRResultRepository> { OCRResultRepositoryImpl() }
 
