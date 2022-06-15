@@ -47,10 +47,11 @@ android {
 
 dependencies {
     def nav_version = "2.4.2"
-    def camerax_version = "1.2.0-alpha01"
+    def camerax_version = "1.2.0-alpha02"
     def koin_version = "3.2.0"
+    def coil_version = "2.1.0"
 
-    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.core:core-ktx:1.8.0"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -74,8 +75,8 @@ dependencies {
 
     implementation "com.google.mlkit:text-recognition-japanese:16.0.0-beta4"
 
-    implementation("io.coil-kt:coil-base:2.1.0")
-    implementation("io.coil-kt:coil-compose-base:2.1.0")
+    implementation("io.coil-kt:coil-base:$coil_version")
+    implementation("io.coil-kt:coil-compose-base:$coil_version")
 
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
